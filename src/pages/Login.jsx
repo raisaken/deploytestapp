@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import BaseApi from "../config/Api";
-// import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import { useDispatch } from "react-redux";
 //MaterialUI
 import {
@@ -10,20 +10,21 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Link,
   Grid,
   Typography,
   Container,
 } from "@mui/material";
 // import { useAuth } from "../config/UserContext";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/users/UserSlice";
+import { useNavigate } from "react-router-dom";
 // import { login } from "../features/users/UserSlice";
 
 export const Login = () => {
   //   const auth = useAuth();
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   // const dispatch = useDispatch();
   const initialFormData = Object.freeze({
     email: "",
@@ -41,14 +42,22 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(formData)
     dispatch(login(formData));
   };
+
+  const success = useSelector((state) => state.user.isSuccess);
+  console.log(success);
+
+  useEffect(() => {
+
+    if (success) {
+      navigate("/");
+    }
+  }, [success]);
 
   return (
     <Container component="main" maxWidth="xs" sx={{ my: 10 }}>
       <CssBaseline />
-      <button onClick={handleSubmit}>sdsdsds</button>
       <div>
         <Avatar></Avatar>
         <Typography component="h1" variant="h5">
@@ -94,12 +103,12 @@ export const Login = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" to="/">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" to="/register">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
